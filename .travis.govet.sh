@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd "$(dirname $0)"
-DIRS=". assert require mock _codegen"
+DIRS=". query"
 set -e
 for subdir in $DIRS; do
   pushd $subdir
