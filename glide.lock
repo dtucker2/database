@@ -1,9 +1,13 @@
 hash: 486699ae895daba8ba6f2b19d7fb9322a2fd567a6d9542cd3dd13fc39d4ef4d9
-updated: 2019-01-26T20:27:06.353874933Z
+updated: 2019-01-26T21:44:38.618783586Z
 imports:
 - name: github.com/jinzhu/inflection
   version: 04140366298a54a039076d798123ffa108fff46c
+- name: github.com/pkg/errors
+  version: ffb6e22f01932bf7ac35e0bad9be11f01d1c8685
 testImports:
+- name: github.com/DATA-DOG/go-sqlmock
+  version: 2a5889fc86505da3080d80031b68d4ba8804f82a
 - name: github.com/davecgh/go-spew
   version: d8f796af33cc11cb798c1aaeb27a4ebc5099927d
   subpackages:
@@ -16,3 +20,4 @@ testImports:
   version: f35b8ab0b5a2cef36673838d662e249dd9c94686
   subpackages:
   - assert
+  - require

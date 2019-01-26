@@ -21,7 +21,9 @@ func TestQueryBuilder_BuildInsertQuery(t *testing.T) {
 			Name: "Test Object",
 		}
 		builder := NewQueryBuilder()
-		assert.Equal(t, `INSERT INTO Objects (Id,Name,CreatedAt,UpdatedAt) VALUES (?,?,?,?)`, builder.BuildInsertQuery(&object))
+		query, args := builder.BuildInsertQuery(&object)
+		assert.Equal(t, `INSERT INTO Objects (Id,Name,CreatedAt,UpdatedAt) VALUES (?,?,?,?)`, query)
+		assert.Equal(t, []interface{}{0, "Test Object", (*time.Time)(nil), (*time.Time)(nil)}, args)
 	})
 }
 
@@ -37,6 +39,8 @@ func TestQueryBuilder_BuildUpdateQuery(t *testing.T) {
 			Name: "Test Object",
 		}
 		builder := NewQueryBuilder()
-		assert.Equal(t, `UPDATE Objects SET Id=?,Name=?,CreatedAt=?,UpdatedAt=? WHERE Id=?`, builder.BuildUpdateQuery(&object))
+		query, args := builder.BuildUpdateQuery(&object)
+		assert.Equal(t, `UPDATE Objects SET Id=?,Name=?,CreatedAt=?,UpdatedAt=? WHERE Id=?`, query)
+		assert.Equal(t, []interface{}{0, "Test Object", (*time.Time)(nil), (*time.Time)(nil), 0}, args)
 	})
 }
