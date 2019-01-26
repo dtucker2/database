@@ -1,4 +1,4 @@
-package query_builder
+package query
 
 import (
 	"reflect"
@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/inflection"
 )
 
+// QueryBuilder provides methods to generate MySQL queries from structs.
 type QueryBuilder struct{}
 
 // NewQueryBuilder returns a pointer to a new instance of the QueryBuilder struct.
@@ -25,7 +26,7 @@ func (builder *QueryBuilder) BuildInsertQuery(object interface{}) string {
 	}, " ")
 }
 
-// BuildInsertQuery constructs and returns a MySQL UPDATE query from the passed object.
+// BuildUpdateQuery constructs and returns a MySQL UPDATE query from the passed object.
 func (builder *QueryBuilder) BuildUpdateQuery(object interface{}) string {
 	return strings.Join([]string{
 		"UPDATE",

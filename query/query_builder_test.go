@@ -1,7 +1,7 @@
-package query_builder_test
+package query_test
 
 import (
-	. "github.com/dtucker2/database/query_builder"
+	. "github.com/dtucker2/database/query"
 
 	"testing"
 	"time"
