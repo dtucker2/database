@@ -1,1 +1,2 @@
 # database
+[![GoDoc](https://godoc.org/github.com/dtucker2/database?status.svg)](https://godoc.org/github.com/dtucker2/database) [![Build Status](https://travis-ci.org/dtucker2/database.svg)](https://travis-ci.org/dtucker2/database) [![Go Report Card](https://goreportcard.com/badge/github.com/dtucker2/database)](https://goreportcard.com/report/github.com/dtucker2/database) 
