@@ -7,4 +7,7 @@ script:
   - ./.travis.gogenerate.sh
   - ./.travis.gofmt.sh
   - ./.travis.govet.sh
-  - go test -v -race $(go list ./... | grep -v vendor)
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic $(go list ./... | grep -v vendor)
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
