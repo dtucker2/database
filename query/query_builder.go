@@ -45,6 +45,35 @@ func (builder *QueryBuilder) BuildUpdateQuery(object interface{}) (string, []int
 	}, " "), args
 }
 
+// BuildDeleteQuery constructs and returns a MySQL DELETE query and arguments from the passed object (struct pointer).
+func (builder *QueryBuilder) BuildDeleteQuery(object interface{}) (string, []interface{}) {
+	args := []interface{}{
+		builder.getPrimaryKeyColumnValue(object),
+	}
+	return strings.Join([]string{
+		"DELETE",
+		"FROM",
+		builder.getTableName(object),
+		"WHERE",
+		builder.getPrimaryKeyColumnName(object) + "=?",
+	}, " "), args
+}
+
+// BuildSelectQuery constructs and returns a MySQL SELECT query and arguments from the passed object (struct pointer).
+func (builder *QueryBuilder) BuildSelectQuery(object interface{}) (string, []interface{}) {
+	args := []interface{}{
+		builder.getPrimaryKeyColumnValue(object),
+	}
+	return strings.Join([]string{
+		"SELECT",
+		"(" + strings.Join(builder.getColumnNames(object), ",") + ")",
+		"FROM",
+		builder.getTableName(object),
+		"WHERE",
+		builder.getPrimaryKeyColumnName(object) + "=?",
+	}, " "), args
+}
+
 func (builder *QueryBuilder) getTableName(object interface{}) string {
 	typ := reflect.TypeOf(object).Elem()
 	return inflection.Plural(typ.Name())
@@ -60,6 +89,15 @@ func (builder *QueryBuilder) getColumnNamesAndValues(object interface{}) ([]stri
 		values = append(values, val.Field(i).Interface())
 	}
 	return columnNames, values
+}
+
+func (builder *QueryBuilder) getColumnNames(object interface{}) []string {
+	typ := reflect.TypeOf(object).Elem()
+	columnNames := make([]string, 0)
+	for i := 0; i < typ.NumField(); i++ {
+		columnNames = append(columnNames, typ.Field(i).Name)
+	}
+	return columnNames
 }
 
 func (builder *QueryBuilder) buildUpdateValues(columnNames []string) string {

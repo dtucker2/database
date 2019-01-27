@@ -44,3 +44,39 @@ func TestQueryBuilder_BuildUpdateQuery(t *testing.T) {
 		assert.Equal(t, []interface{}{0, "Test Object", (*time.Time)(nil), (*time.Time)(nil), 0}, args)
 	})
 }
+
+func TestQueryBuilder_BuildDeleteQuery(t *testing.T) {
+	t.Run("basic", func(t *testing.T) {
+		type Object struct {
+			Id        int
+			Name      string
+			CreatedAt *time.Time
+			DeletedAt *time.Time
+		}
+		object := Object{
+			Id: 1,
+		}
+		builder := NewQueryBuilder()
+		query, args := builder.BuildDeleteQuery(&object)
+		assert.Equal(t, `DELETE FROM Objects WHERE Id=?`, query)
+		assert.Equal(t, []interface{}{1}, args)
+	})
+}
+
+func TestQueryBuilder_BuildSelectQuery(t *testing.T) {
+	t.Run("basic", func(t *testing.T) {
+		type Object struct {
+			Id        int
+			Name      string
+			CreatedAt *time.Time
+			UpdatedAt *time.Time
+		}
+		object := Object{
+			Name: "Test Object",
+		}
+		builder := NewQueryBuilder()
+		query, args := builder.BuildSelectQuery(&object)
+		assert.Equal(t, `SELECT (Id,Name,CreatedAt,UpdatedAt) FROM Objects WHERE Id=?`, query)
+		assert.Equal(t, []interface{}{0}, args)
+	})
+}
