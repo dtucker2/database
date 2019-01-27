@@ -35,9 +35,11 @@ func (db *Database) Insert(object interface{}) error {
 
 // Update constructs and executes an update query on the database using only the passed pointer to a struct.
 func (db *Database) Update(object interface{}) error {
-	query, args := db.BuildUpdateQuery(object)
-	_, err := db.DB.Exec(query, args...)
+	query, args, err := db.BuildUpdateQuery(object)
 	if err != nil {
+		return err
+	}
+	if _, err := db.DB.Exec(query, args...); err != nil {
 		return errors.Wrap(err, "Failed to execute query.")
 	}
 	return nil
@@ -46,9 +48,11 @@ func (db *Database) Update(object interface{}) error {
 // Delete constructs and executes a delete query on the database using only the passed pointer to a struct.
 // The structs primary key field must be populated as this populates the 'WHERE' clause of the query.
 func (db *Database) Delete(object interface{}) error {
-	query, args := db.BuildDeleteQuery(object)
-	_, err := db.DB.Exec(query, args...)
+	query, args, err := db.BuildDeleteQuery(object)
 	if err != nil {
+		return err
+	}
+	if _, err := db.DB.Exec(query, args...); err != nil {
 		return errors.Wrap(err, "Failed to execute query.")
 	}
 	return nil
@@ -58,7 +62,10 @@ func (db *Database) Delete(object interface{}) error {
 // The structs primary key field must be populated as this populates the 'WHERE' clause of the query.
 // The resulting row will be returned by reference in the passed struct.
 func (db *Database) Select(object interface{}) error {
-	query, args := db.BuildSelectQuery(object)
+	query, args, err := db.BuildSelectQuery(object)
+	if err != nil {
+		return err
+	}
 	row := db.DB.QueryRow(query, args...)
 	if err := row.Scan(db.getFieldPointers(object)...); err != nil {
 		return errors.Wrap(err, "Failed to execute query.")
