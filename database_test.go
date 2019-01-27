@@ -20,7 +20,7 @@ type object struct {
 }
 
 type objectWithTags struct {
-	Id        int        `name:"id" type:"auto-increment" key:"true`
+	Id        int        `name:"id" type:"auto-increment" key:"true"`
 	Name      string     `name:"name"`
 	CreatedAt *time.Time `name:"created_at" type:"created_at"`
 	UpdatedAt *time.Time `name:"updated_at" type:"updated_at"`
