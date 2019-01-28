@@ -1,5 +1,6 @@
 # Database
 [![GoDoc](https://godoc.org/github.com/dtucker2/database?status.svg)](https://godoc.org/github.com/dtucker2/database) [![Build Status](https://travis-ci.org/dtucker2/database.svg)](https://travis-ci.org/dtucker2/database) [![Go Report Card](https://goreportcard.com/badge/github.com/dtucker2/database)](https://goreportcard.com/report/github.com/dtucker2/database) [![codecov.io](https://codecov.io/github/dtucker2/database/branch/master/graph/badge.svg)](https://codecov.io/github/dtucker2/database)
+
 Removes the need for building queries!
 ## Usage
 ### setup.sql
