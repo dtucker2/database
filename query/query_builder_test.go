@@ -28,6 +28,17 @@ func (obj *objectWithTags) GetTableName() string {
 	return "objects"
 }
 
+type objectWithNoKey struct {
+	AnId      int        `name:"an_id" type:"auto-increment"`
+	Name      string     `name:"name"`
+	CreatedAt *time.Time `name:"created_at" type:"created_at"`
+	UpdatedAt *time.Time `name:"updated_at" type:"updated_at"`
+}
+
+func (obj *objectWithNoKey) GetTableName() string {
+	return "objects"
+}
+
 func TestQueryBuilder_BuildInsertQuery(t *testing.T) {
 	t.Run("basic", func(t *testing.T) {
 		obj := object{
@@ -80,6 +91,15 @@ func TestQueryBuilder_BuildUpdateQuery(t *testing.T) {
 			assert.Equal(t, args[2], 1)
 		}
 	})
+	t.Run("no primary key", func(t *testing.T) {
+		obj := objectWithNoKey{
+			AnId: 1,
+			Name: "Test Object",
+		}
+		builder := NewQueryBuilder()
+		_, _, err := builder.BuildUpdateQuery(&obj)
+		require.Error(t, err)
+	})
 }
 
 func TestQueryBuilder_BuildDeleteQuery(t *testing.T) {
@@ -102,6 +122,14 @@ func TestQueryBuilder_BuildDeleteQuery(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, `DELETE FROM objects WHERE id=?`, query)
 		assert.Equal(t, []interface{}{1}, args)
+	})
+	t.Run("no primary key", func(t *testing.T) {
+		obj := objectWithNoKey{
+			AnId: 1,
+		}
+		builder := NewQueryBuilder()
+		_, _, err := builder.BuildDeleteQuery(&obj)
+		require.Error(t, err)
 	})
 }
 
@@ -126,5 +154,14 @@ func TestQueryBuilder_BuildSelectQuery(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, `SELECT (id,name,created_at,updated_at) FROM objects WHERE id=?`, query)
 		assert.Equal(t, []interface{}{1}, args)
+	})
+	t.Run("no primary key", func(t *testing.T) {
+		obj := objectWithNoKey{
+			AnId: 1,
+			Name: "Test Object",
+		}
+		builder := NewQueryBuilder()
+		_, _, err := builder.BuildSelectQuery(&obj)
+		require.Error(t, err)
 	})
 }

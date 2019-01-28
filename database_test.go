@@ -4,6 +4,7 @@ import (
 	. "github.com/dtucker2/database"
 
 	"database/sql/driver"
+	"fmt"
 	"testing"
 	"time"
 
@@ -63,6 +64,18 @@ func TestDatabase_Insert(t *testing.T) {
 		require.NoError(t, NewDatabase(db).Insert(&obj))
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+	t.Run("error", func(t *testing.T) {
+		obj := object{
+			Name: "Test Object",
+		}
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+		mock.ExpectExec(`INSERT INTO objects \(Id,Name,CreatedAt,UpdatedAt\) VALUES \(\?,\?,\?,\?\)`).
+			WithArgs(0, "Test Object", (*time.Time)(nil), (*time.Time)(nil)).
+			WillReturnError(fmt.Errorf("Something terrible happened!"))
+		require.Error(t, NewDatabase(db).Insert(&obj))
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
 
 func TestDatabase_Update(t *testing.T) {
@@ -91,6 +104,19 @@ func TestDatabase_Update(t *testing.T) {
 		require.NoError(t, NewDatabase(db).Update(&obj))
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
+	t.Run("error", func(t *testing.T) {
+		obj := objectWithTags{
+			Id:   1,
+			Name: "Test Object",
+		}
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+		mock.ExpectExec(`UPDATE objects SET name=\?,updated_at=\? WHERE id=\?`).
+			WithArgs("Test Object", anyTime{}, 1).
+			WillReturnError(fmt.Errorf("Something terrible happened!"))
+		require.Error(t, NewDatabase(db).Update(&obj))
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
 }
 
 func TestDatabase_Delete(t *testing.T) {
@@ -116,6 +142,18 @@ func TestDatabase_Delete(t *testing.T) {
 			WithArgs(1).
 			WillReturnResult(sqlmock.NewResult(1, 1))
 		require.NoError(t, NewDatabase(db).Delete(&obj))
+		assert.NoError(t, mock.ExpectationsWereMet())
+	})
+	t.Run("error", func(t *testing.T) {
+		obj := objectWithTags{
+			Id: 1,
+		}
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+		mock.ExpectExec(`DELETE FROM objects WHERE id=\?`).
+			WithArgs(1).
+			WillReturnError(fmt.Errorf("Something terrible happened!"))
+		require.Error(t, NewDatabase(db).Delete(&obj))
 		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
@@ -148,5 +186,17 @@ func TestDatabase_Select(t *testing.T) {
 		require.NoError(t, NewDatabase(db).Select(&obj))
 		assert.NoError(t, mock.ExpectationsWereMet())
 		assert.Equal(t, objectWithTags{Id: 1, Name: "Test Object", CreatedAt: nil, UpdatedAt: nil}, obj)
+	})
+	t.Run("error", func(t *testing.T) {
+		obj := objectWithTags{
+			Id: 1,
+		}
+		db, mock, err := sqlmock.New()
+		require.NoError(t, err)
+		mock.ExpectQuery(`SELECT \(id,name,created_at,updated_at\) FROM objects WHERE id=\?`).
+			WithArgs(1).
+			WillReturnError(fmt.Errorf("Something terrible happened!"))
+		require.Error(t, NewDatabase(db).Select(&obj))
+		assert.NoError(t, mock.ExpectationsWereMet())
 	})
 }
