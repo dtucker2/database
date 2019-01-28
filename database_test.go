@@ -165,7 +165,7 @@ func TestDatabase_Select(t *testing.T) {
 		}
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
-		mock.ExpectQuery(`SELECT \(Id,Name,CreatedAt,UpdatedAt\) FROM objects WHERE Id=\?`).
+		mock.ExpectQuery(`SELECT Id,Name,CreatedAt,UpdatedAt FROM objects WHERE Id=\?`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows([]string{"Id", "Name", "CreatedAt", "UpdatedAt"}).
 				AddRow(1, "Test Object", (*time.Time)(nil), (*time.Time)(nil)))
@@ -179,7 +179,7 @@ func TestDatabase_Select(t *testing.T) {
 		}
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
-		mock.ExpectQuery(`SELECT \(id,name,created_at,updated_at\) FROM objects WHERE id=\?`).
+		mock.ExpectQuery(`SELECT id,name,created_at,updated_at FROM objects WHERE id=\?`).
 			WithArgs(1).
 			WillReturnRows(sqlmock.NewRows([]string{"id", "name", "created_at", "updated_at"}).
 				AddRow(1, "Test Object", (*time.Time)(nil), (*time.Time)(nil)))
@@ -193,7 +193,7 @@ func TestDatabase_Select(t *testing.T) {
 		}
 		db, mock, err := sqlmock.New()
 		require.NoError(t, err)
-		mock.ExpectQuery(`SELECT \(id,name,created_at,updated_at\) FROM objects WHERE id=\?`).
+		mock.ExpectQuery(`SELECT id,name,created_at,updated_at FROM objects WHERE id=\?`).
 			WithArgs(1).
 			WillReturnError(fmt.Errorf("Something terrible happened!"))
 		require.Error(t, NewDatabase(db).Select(&obj))

@@ -82,7 +82,7 @@ func (builder *QueryBuilder) BuildSelectQuery(object interface{}) (string, []int
 	}
 	return strings.Join([]string{
 		"SELECT",
-		"(" + strings.Join(builder.getColumnNames(object), ",") + ")",
+		strings.Join(builder.getColumnNames(object), ","),
 		"FROM",
 		builder.getTableName(object),
 		"WHERE",

@@ -141,7 +141,7 @@ func TestQueryBuilder_BuildSelectQuery(t *testing.T) {
 		builder := NewQueryBuilder()
 		query, args, err := builder.BuildSelectQuery(&obj)
 		require.NoError(t, err)
-		assert.Equal(t, `SELECT (Id,Name,CreatedAt,UpdatedAt) FROM objects WHERE Id=?`, query)
+		assert.Equal(t, `SELECT Id,Name,CreatedAt,UpdatedAt FROM objects WHERE Id=?`, query)
 		assert.Equal(t, []interface{}{0}, args)
 	})
 	t.Run("tags", func(t *testing.T) {
@@ -152,7 +152,7 @@ func TestQueryBuilder_BuildSelectQuery(t *testing.T) {
 		builder := NewQueryBuilder()
 		query, args, err := builder.BuildSelectQuery(&obj)
 		require.NoError(t, err)
-		assert.Equal(t, `SELECT (id,name,created_at,updated_at) FROM objects WHERE id=?`, query)
+		assert.Equal(t, `SELECT id,name,created_at,updated_at FROM objects WHERE id=?`, query)
 		assert.Equal(t, []interface{}{1}, args)
 	})
 	t.Run("no primary key", func(t *testing.T) {
